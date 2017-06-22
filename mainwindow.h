@@ -23,11 +23,15 @@ public slots:
     void SlotReadSerial();
 private slots:
     void SlotCheckButton();
+    void SlotDCOpenButton();
+    void SlotDCCloseButton();
 private:
     void initSerialPort();
 private:
     Ui::MainWindow *ui;
     QPushButton *m_pFlagPushButton;
+    QPushButton *m_pDCOpenPushButton;
+    QPushButton *m_pDCClosePushButton;
     QSerialPort *m_pSerialPort;
     QList<QSerialPortInfo> m_listSerialPortInfo;
 };

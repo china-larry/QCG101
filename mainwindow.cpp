@@ -13,6 +13,14 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pFlagPushButton->move(30, 50);
     connect(m_pFlagPushButton, SIGNAL(clicked(bool)), this, SLOT(SlotCheckButton()));
     //
+    m_pDCOpenPushButton = new QPushButton("直流电机开", this);
+    m_pDCOpenPushButton->move(150, 50);
+    connect(m_pDCOpenPushButton, SIGNAL(clicked(bool)), this, SLOT(SlotDCOpenButton()));
+    //
+    m_pDCClosePushButton = new QPushButton("直流电机关", this);
+    m_pDCClosePushButton->move(270, 50);
+    connect(m_pDCClosePushButton, SIGNAL(clicked(bool)), this, SLOT(SlotDCCloseButton()));
+    //
     initSerialPort();
 }
 
@@ -23,6 +31,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::SlotReadSerial()
 {
+    if(m_pSerialPort->bytesAvailable() < 0)
+    {
+        qDebug() << "not data";
+        return;
+    }
     QByteArray qa = m_pSerialPort->readAll();
     qDebug() << "size: " << qa.size() << qa;
 }
@@ -31,9 +44,27 @@ void MainWindow::SlotCheckButton()
 {
             QString qstrData = "23 23 00 A7 00 00 00 00 00 00 00 00 2F 0D 0A";
             bool ok;
-            QByteArray qbaHexData = BgComm::HexStringToByteArray(qstrData, &ok);
+            QByteArray qbaHexData = BgComm::HexStringToByteArray(qstrData, &ok);// toHex
             qDebug() << "qbaHexData: " << qbaHexData;
             m_pSerialPort->write(qbaHexData);
+}
+
+void MainWindow::SlotDCOpenButton()
+{
+    QString qstrData = "23 23 00 A1 00 00 00 01 00 00 00 00 01 9D 0D 0A";
+    bool ok;
+    QByteArray qbaHexData = BgComm::HexStringToByteArray(qstrData, &ok);// toHex
+    qDebug() << "qbaHexData: " << qbaHexData;
+    m_pSerialPort->write(qbaHexData);
+}
+
+void MainWindow::SlotDCCloseButton()
+{
+    QString qstrData = "23 23 00 A1 00 00 00 01 00 00 00 00 00 C3 0D 0A";
+    bool ok;
+    QByteArray qbaHexData = BgComm::HexStringToByteArray(qstrData, &ok);// toHex
+    qDebug() << "qbaHexData: " << qbaHexData;
+    m_pSerialPort->write(qbaHexData);
 }
 
 void MainWindow::initSerialPort()
