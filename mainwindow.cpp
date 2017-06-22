@@ -36,6 +36,7 @@ void MainWindow::SlotReadSerial()
         qDebug() << "not data";
         return;
     }
+    // 读取测试只有16字节
     QByteArray qa = m_pSerialPort->readAll();
     qDebug() << "size: " << qa.size() << qa;
 }
